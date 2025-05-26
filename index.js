@@ -1,17 +1,34 @@
 import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+// Load .env variables
+dotenv.config(); // This assumes .env is in the same directory
 
 const app = express();
-const port = 4000;
+const port = process.env.PORT || 4000;
 
-// Middleware (optional)
+const dbUrl = process.env.DB_CONNECTION_URL;
+// console.log("DB URL:", dbUrl); // Check if it prints correctly
+
 app.use(express.json());
 
-// Base route
 app.get("/", (req, res) => {
-  res.send("The server running"); // Fixed typo: `Send` → `send`, and added `req`
+  res.send("The server is running");
 });
 
-// Start the server
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
+
+// Connect to DB
+async function dbConnect() {
+  try {
+    await mongoose.connect(dbUrl);
+    console.log("✅ DB Connected Successfully...............");
+  } catch (error) {
+    console.error("❌ DB Connection Error:", error);
+  }
+}
+
+dbConnect();
