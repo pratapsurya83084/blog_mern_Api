@@ -5,6 +5,7 @@ import { ErrorHandler } from "../utils/error.js";
 export const singnup = async (req, res,next) => {
   //get input
   const { username, email, password } = req.body;
+console.log("data receive:",username,email,password);
 
 if (
     !email ||
@@ -20,8 +21,8 @@ if (
  try {
      const CheckUserExist = await User.findOne({ email });
      if (CheckUserExist) {
-    //    return res.status(404).json({ message: "user already exists." });
-   next(ErrorHandler(400,"user already exists."))
+       return res.json({ message: "user already exists.",success:false });
+
     }
    
      //hash password
@@ -36,6 +37,7 @@ if (
        res.json({
          message: "User created SuccessFully",
          user: req.body,
+         success:true
        });
      }
    

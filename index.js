@@ -3,10 +3,18 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import UserRouter from "./routes/user.route.js";
 import AuthRoute from "./routes/auth.route.js";
+import cors from 'cors';
 // Load .env variables
 dotenv.config(); // This assumes .env is in the same directory
 
 const app = express();
+
+
+app.use(cors({
+ origin:"http://localhost:5173",
+ 
+}))
+
 const port = process.env.PORT || 4000;
 
 const dbUrl = process.env.DB_CONNECTION_URL;
