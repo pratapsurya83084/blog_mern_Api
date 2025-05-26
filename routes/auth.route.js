@@ -1,9 +1,10 @@
 import express, { Router } from 'express';
-import {singnup} from '../controller/auth.controller.js';
+import {singnup,signin} from '../controller/auth.controller.js';
 const router = express.Router();
 
 
 router.post("/signup",singnup);
+router.post("/signin",signin);
 
 
 
