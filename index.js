@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import UserRouter from "./routes/user.route.js";
 import AuthRoute from "./routes/auth.route.js";
 import cors from 'cors';
+import cookieParser from "cookie-parser";
 // Load .env variables
 dotenv.config(); // This assumes .env is in the same directory
 
@@ -21,7 +22,7 @@ const dbUrl = process.env.DB_CONNECTION_URL;
 // console.log("DB URL:", dbUrl); // Check if it prints correctly
 
 app.use(express.json());
-
+app.use(cookieParser());
 app.get("/", (req, res) => {
   res.send("The server is running");
 });
@@ -46,8 +47,8 @@ dbConnect();
 app.use("/api/user", UserRouter);
 app.use("/api/auth", AuthRoute);
 
-app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  const message = err.message || "Internal Server Error";
-  res.status(statusCode).json({ success: false, statusCode, message });
-});
+// app.use((err, req, res, next) => {
+//   const statusCode = err.statusCode || 500;
+//   const message = err.message || "Internal Server Error";
+//   res.status(statusCode).json({ success: false, statusCode, message });
+// });

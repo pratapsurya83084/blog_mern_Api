@@ -69,7 +69,7 @@ export const signin = async (req, res) => {
         const token = jwt.sign({ userId: userExiste._id }, "&%$#!!(^@#@!", {
           expiresIn: "2d",
         });
-        console.log(token);
+        // console.log(token);
 
         res.cookie("access_token", token, {
           httpOnly: true,
@@ -96,7 +96,7 @@ export const signin = async (req, res) => {
 
 dotenv.config();
 
-export const google = async (req, res) => {
+ export const google = async (req, res) => {
   try {
     const { email, name, picture } = req.body;
 
