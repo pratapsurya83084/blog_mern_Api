@@ -8,7 +8,7 @@ import dotenv from "dotenv";
 export const singnup = async (req, res, next) => {
   //get input
   const { username, email, password } = req.body;
-  console.log("data receive:", username, email, password);
+  // console.log("data receive:", username, email, password);
 
   if (
     !email ||
@@ -97,7 +97,6 @@ export const signin = async (req, res) => {
 };
 
 dotenv.config();
-
 export const google = async (req, res) => {
   try {
     const { email, name, picture } = req.body;
@@ -117,20 +116,16 @@ export const google = async (req, res) => {
       await user.save();
     }
 
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET || "&%$#!!(^@#@!",
-      {
-        expiresIn: "2d",
-      }
-    );
+    const token = jwt.sign({ userId: user._id }, "&%$#!!(^@#@!", {
+      expiresIn: "2d",
+    });
 
     // Set secure cookie
-    res.cookie("googleToken", token, {
-      httpOnly: false, // set to true for security
+    res.cookie("token", token, {
+      httpOnly: true, // set to true for security
       secure: true, // must be true when using SameSite: "None"
       sameSite: "None", // required for cross-origin cookies
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      maxAge: 24 * 24 * 60 * 60 * 1000, // 2 day
     });
 
     return res.status(200).json({
@@ -152,4 +147,21 @@ export const google = async (req, res) => {
       success: false,
     });
   }
+};
+
+// signout Controller
+export const SignoutUser = async (req, res) => {
+  res.cookie("token", "", {
+    httpOnly: false,
+    secure: true, // Change to `true` in production (if using HTTPS)
+    sameSite: "None",
+    expires: new Date(0), // or 'Strict' based on your app
+  });
+
+  
+    res.json({
+      message: "User logout successfully",
+      success: true,
+    });
+
 };

@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 export const verifyUser = async (req, res, next) => {
-  const token = req.cookies.token || req.cookies.googleToken;
+  const token = req.cookies.token 
 // console.log(token);
 
   if (!token) {
@@ -14,6 +14,7 @@ export const verifyUser = async (req, res, next) => {
   try {
     const decodedToken = jwt.verify(token, "&%$#!!(^@#@!"); // don't use await here — jwt.verify is synchronous
     req.user = decodedToken;
+// console.log(req.user);
 
     // ✅ Move to next middleware or route
     next();
