@@ -1,33 +1,35 @@
-
-import User from '../models/user.model.js'
+import User from "../models/user.model.js";
 
 export const singnup = async (req, res) => {
+  //for testing
   //   res.json({
   //     message: "Here I have created signup API"
   //   });
 };
 
-
-
-
-
 export const updateUser = async (req, res, next) => {
+  const { username, email, password } = req.body;
 
-const {username,email,password} = req.body;
-
-if (!username || !email ||!password ||username==""||email==""||password=="") {
+  if (
+    !username ||
+    !email ||
+    !password ||
+    username == "" ||
+    email == "" ||
+    password == ""
+  ) {
     return res.json({
-        message: "Please fill all the fields",
-        success: false
-    })
-}
+      message: "Please fill all the fields",
+      success: false,
+    });
+  }
 
-if (password.length >20 || password.length< 6) {
+  if (password.length > 20 || password.length < 6) {
     return res.json({
-        message:"password must be between 6 to 20 ",
-        success:false,
-    })
-}
+      message: "password must be between 6 to 20 length",
+      success: false,
+    });
+  }
 
   // console.log("requested user:",req.params.userId);
   if (req.user.userId !== req.params.userId) {
@@ -38,17 +40,51 @@ if (password.length >20 || password.length< 6) {
   } else {
     // here write user update logic
 
-    const updateUser = await User.findByIdAndUpdate(req.params.userId, {
-      $set: {
-        username,
-        email,
-        password 
-      }
-    },{new: true});
+    const updateUser = await User.findByIdAndUpdate(
+      req.params.userId,
+      {
+        $set: {
+          username,
+          email,
+          password,
+        },
+      },
+      { new: true }
+    );
     return res.json({
       message: "user Updated SuccessFully",
-      updateUser,
+      user: updateUser,
       success: true,
     });
+  }
+};
+
+//deleteUser
+
+export const DeleteUser = async (req,res) => {
+  const userId = req.params.userId;
+  console.log("params id:",userId);
+  
+  const middlewareUserId = req.user.userId;
+  console.log("middlewared id: "+ middlewareUserId);
+  
+  if (userId !== middlewareUserId) {
+    return res.json({
+      message: "user cannot delete account",
+      success: false,
+    });
+  }
+
+  const delteUserAccount = await User.findByIdAndDelete({_id:userId });
+  if (delteUserAccount) {
+    return res.json({
+      message: "user deleted successfully",
+      success: true,
+    });
+  }else{
+    return res.json({
+      message: "user not found",
+      success: false,
+    })
   }
 };

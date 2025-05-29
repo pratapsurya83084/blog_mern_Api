@@ -71,9 +71,11 @@ export const signin = async (req, res) => {
         });
         // console.log(token);
 
-        res.cookie("access_token", token, {
-          httpOnly: true,
-          maxAge: 2 * 24 * 60 * 60 * 1000,
+        res.cookie("token", token, {
+          httpOnly: true, // ✅ secure: prevents JavaScript access
+          secure: false, // ✅ true in production with HTTPS
+          sameSite: "lax", // ✅ prevents CSRF in most cases
+          maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
         });
 
         return res.json({
@@ -96,7 +98,7 @@ export const signin = async (req, res) => {
 
 dotenv.config();
 
- export const google = async (req, res) => {
+export const google = async (req, res) => {
   try {
     const { email, name, picture } = req.body;
 
@@ -125,7 +127,7 @@ dotenv.config();
 
     // Set secure cookie
     res.cookie("googleToken", token, {
-      httpOnly: true, // set to true for security
+      httpOnly: false, // set to true for security
       secure: true, // must be true when using SameSite: "None"
       sameSite: "None", // required for cross-origin cookies
       maxAge: 24 * 60 * 60 * 1000, // 1 day
