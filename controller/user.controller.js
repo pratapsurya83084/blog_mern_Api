@@ -1,5 +1,5 @@
 import User from "../models/user.model.js";
-
+import bcrypt from "bcryptjs";
 export const singnup = async (req, res) => {
   //for testing
   //   res.json({
@@ -24,12 +24,12 @@ export const updateUser = async (req, res, next) => {
     });
   }
 
-  if (password.length > 20 || password.length < 6) {
-    return res.json({
-      message: "password must be between 6 to 20 length",
-      success: false,
-    });
-  }
+  // if (password.length > 20 || password.length < 6) {
+  //   return res.json({
+  //     message: "password must be between 6 to 20 length",
+  //     success: false,
+  //   });
+  // }
 
   // console.log("requested user:",req.params.userId);
   if (req.user.userId !== req.params.userId) {
@@ -45,8 +45,8 @@ export const updateUser = async (req, res, next) => {
       {
         $set: {
           username,
-          email,
-          password,
+          email:email,
+          password :bcrypt.hashSync(password, 10),
         },
       },
       { new: true }

@@ -66,7 +66,7 @@ export const signin = async (req, res) => {
         return res.json({ message: "invalid password", success: false });
       } else {
         //if match then return token
-        const token = jwt.sign({ userId: userExiste._id }, "&%$#!!(^@#@!", {
+        const token = jwt.sign({ userId: userExiste._id ,isAdmin:userExiste.isAdmin}, "&%$#!!(^@#@!", {
           expiresIn: "2d",
         });
         // console.log(token);
@@ -116,7 +116,7 @@ export const google = async (req, res) => {
       await user.save();
     }
 
-    const token = jwt.sign({ userId: user._id }, "&%$#!!(^@#@!", {
+    const token = jwt.sign({ userId: user._id , isAdmin:user.isAdmin }, "&%$#!!(^@#@!", {
       expiresIn: "2d",
     });
 
@@ -137,6 +137,7 @@ export const google = async (req, res) => {
         email: user.email,
         picture: user.ProfilePicture,
         userid: user._id,
+        isAdmin:user.isAdmin
       },
     });
   } catch (err) {
