@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import UserRouter from "./routes/user.route.js";
 import AuthRoute from "./routes/auth.route.js";
+import PostRoute from './routes/post.route.js';
 import cors from 'cors';
 import cookieParser from "cookie-parser";
 // Load .env variables
@@ -46,6 +47,7 @@ dbConnect();
 // All Route here
 app.use("/api/user", UserRouter);
 app.use("/api/auth", AuthRoute);
+app.use("/api/post", PostRoute);
 
 // app.use((err, req, res, next) => {
 //   const statusCode = err.statusCode || 500;
