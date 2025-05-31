@@ -1,0 +1,8 @@
+1.file = utils/cloundinary.js 
+step.1 configure cloudinary credential.
+step.2 upload file url(frontend)  to cloudinary with resource_type :auto //auto means they take audio,vidio,image ,etc.
+step.3 then access url from uploaded file i.e uploaded.url  (that return shortest file from cloudinary).
+step.4 then fs.unlinkSync in catch block i.e remove file if fail uploaded.
+
+
+2.file = 

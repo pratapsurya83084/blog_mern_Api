@@ -1,4 +1,6 @@
 import Post from '../models/post.model.js'
+import {uploadOnCloudinary} from '../utils/cloudinary.js';
+
 
 export const CreatePost = async (req, res) => {
   console.log(req.user.isAdmin);
@@ -10,23 +12,44 @@ export const CreatePost = async (req, res) => {
   }
 
   const userId = req.user.userId; //blog created userId
+ 
+  const {title,content ,image,category} = req.body;
 
-  if (!req.body.title || !req.body.content) {
+  if (!title || !content) {
     return res.json({
-      message: "all fields are must be required",
+      message: "title and content are must be required",
       success: false,
     });
   }
 
- const slug = req.body.title
+ const slug = title
   .toLowerCase()
   .trim()
   .replace(/[^a-z0-9\s-]/g, "") // Remove non-alphanumeric except space and hyphen
   .replace(/\s+/g, "-")         // Replace spaces with hyphens
   .replace(/-+/g, "-");         // Replace multiple hyphens with one
 
+//check image is exist in local directory public
+const imageLocalFilePath = req.files?.image[0].path;
+if (!imageLocalFilePath) {
+  return res.json({
+    message: "Please upload an image",
+    success: false,
+  })
+}
+//upload image to cloudinary
+const imageurl = await uploadOnCloudinary(imageLocalFilePath);
+// console.log("cloudinary image url:",imageurl);
 
-  const newPostblog = new Post({ ...req.body, slug, userId });
+if (!imageurl) {
+  return res.json({
+    message: "Failed to upload image to cloudinary",
+    success: false,
+  })
+}
+
+
+const newPostblog = new Post({ title,content ,image:imageurl.url,category, slug, userId });
 
   try {
     const savePost  = await newPostblog.save();
