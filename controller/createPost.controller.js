@@ -6,7 +6,8 @@ export const CreatePost = async (req, res) => {
     // Check if user is admin
     if (!req.user.isAdmin) {
       return res.status(403).json({
-        message: "You are not an admin, so you are not allowed to create posts.",
+        message:
+          "You are not an admin, so you are not allowed to create posts.",
         success: false,
       });
     }
@@ -64,13 +65,13 @@ export const CreatePost = async (req, res) => {
       message: "Blog created successfully",
       success: true,
     });
-
   } catch (error) {
     // Catch duplicate slug error
     if (error.code === 11000 && error.keyPattern?.slug) {
       return res.json({
         success: false,
-        message: "A post with this slug already exists. Try changing the title.",
+        message:
+          "A post with this slug already exists. Try changing the title.",
       });
     }
 
@@ -83,7 +84,6 @@ export const CreatePost = async (req, res) => {
   }
 };
 
-
 export const GetAllPost = async (req, res) => {
   const retriveAllpost = await Post.find();
 
@@ -92,4 +92,46 @@ export const GetAllPost = async (req, res) => {
     success: true,
     BlogPost: retriveAllpost,
   });
+};
+
+export const getposts = async (req,res) => {
+  try {
+    const startIndex = parseInt(req.query.startIndex) || 0;
+    const limit = parseInt(req.query.limit) || 0;
+    const sortDirection = req.query.order === "asc" ? 1 : -1;
+    const posts = await Post.find({
+      ...(req.query.userId && { userId: req.query.userId }),
+      ...(req.query.category && { category: req.query.category }),
+      ...(req.query.slug && { slug: req.query.slug }),
+      ...(req.query.postId && { _id: req.query.postId }),
+      ...(req.query.searchTerm && {
+        $or: [
+          { title: { $regex: req.query.searchTerm, $options: "i" } },
+          { content: { $regex: req.query.searchTerm, $options: "i" } },
+        ],
+      }),
+    })
+      .sort({ updatedAt: sortDirection })
+      .skip(startIndex)
+      .limit(limit);
+    const totalPosts = await Post.countDocuments();
+    const now = new Date();
+    const oneMonthago = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      now.getDate()
+    );
+
+    const lastMonthPosts = await Post.countDocuments({
+      createdAt: { $gte: oneMonthago },
+    });
+
+    res.status(200).json({
+      BlogPost: posts,
+      totalPosts,
+      lastMonthPosts,
+    });
+  } catch (error) {
+    console.error("posts fetching error ",error);
+  }
 };
