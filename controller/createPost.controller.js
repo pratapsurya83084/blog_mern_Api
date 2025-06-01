@@ -83,7 +83,7 @@ export const CreatePost = async (req, res) => {
     });
   }
 };
-
+//for testing only
 export const GetAllPost = async (req, res) => {
   const retriveAllpost = await Post.find();
 
@@ -133,5 +133,45 @@ export const getposts = async (req,res) => {
     });
   } catch (error) {
     console.error("posts fetching error ",error);
+  }
+};
+
+
+export const DeletePost = async (req, res) => {
+  try {
+    const { userId, isAdmin } = req.user;
+    const { userId: paramUserId, postId } = req.params;
+console.log(postId);
+
+    // Authorization check
+    if (!isAdmin || !userId ||!paramUserId) {
+      return res.status(403).json({
+        message: "You are not authorized to delete this post",
+        success: false,
+      });
+    }
+
+    // Delete post by ID
+    const deletedPost = await Post.findByIdAndDelete(postId.toString());
+
+    if (!deletedPost) {
+      return res.status(404).json({
+        message: "Post not found",
+        success: false,
+      });
+    }
+
+    return res.json({
+      message: "Post deleted successfully",
+      deletedPost,
+      success: true,
+    });
+
+  } catch (error) {
+    console.error("DeletePost Error:", error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
   }
 };
