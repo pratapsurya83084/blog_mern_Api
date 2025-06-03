@@ -8,12 +8,12 @@ const router = express.Router();
 // image
 router.post("/create-post", verifyUser, upload.single("image"), CreatePost);
 // router.get('/getall-post',GetAllPost);
-router.get('/getallpost',getposts);
+router.get('/getallpost',verifyUser,getposts);
 
 //delete post 
 router.delete('/delete-post/:postId/:userId',verifyUser,DeletePost);
 
 //update route
-router.put('/updatepost/:postId/:userId', verifyUser , upload.single("image") , UpdatePost);
+router.put('/updatepost/:postId/:userId',verifyUser, upload.single("image") , UpdatePost);
 
 export default router;

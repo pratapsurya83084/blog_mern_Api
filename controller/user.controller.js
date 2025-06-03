@@ -45,8 +45,8 @@ export const updateUser = async (req, res, next) => {
       {
         $set: {
           username,
-          email:email,
-          password :bcrypt.hashSync(password, 10),
+          email: email,
+          password: bcrypt.hashSync(password, 10),
         },
       },
       { new: true }
@@ -61,13 +61,13 @@ export const updateUser = async (req, res, next) => {
 
 //deleteUser
 
-export const DeleteUser = async (req,res) => {
+export const DeleteUser = async (req, res) => {
   const userId = req.params.userId;
-  console.log("params id:",userId);
-  
+  console.log("params id:", userId);
+
   const middlewareUserId = req.user.userId;
-  console.log("middlewared id: "+ middlewareUserId);
-  
+  console.log("middlewared id: " + middlewareUserId);
+
   if (userId !== middlewareUserId) {
     return res.json({
       message: "user cannot delete account",
@@ -75,16 +75,72 @@ export const DeleteUser = async (req,res) => {
     });
   }
 
-  const delteUserAccount = await User.findByIdAndDelete({_id:userId });
+  const delteUserAccount = await User.findByIdAndDelete({ _id: userId });
   if (delteUserAccount) {
     return res.json({
       message: "user deleted successfully",
       success: true,
     });
-  }else{
+  } else {
     return res.json({
       message: "user not found",
       success: false,
-    })
+    });
+  }
+};
+
+//GetUsers all
+export const GetUsers = async (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.json({
+      message: "you are not allowed to retrieve All users",
+      success: false,
+    });
+  }
+
+  const usersAll = await User.find();
+  if (usersAll) {
+    return res.json({
+      message: "users retrieved successfully",
+      success: true,
+      users: usersAll,
+    });
+  } else {
+    return res.json({
+      message: "users not found",
+      success: false,
+    });
+  }
+};
+
+export const DeleteUserByAdmin = async (req, res) => {
+  const userId = req.params.userId;
+  console.log("params id:", userId);
+
+if (!req.user.isAdmin) {
+  return  res.json({
+    message: "you are not allowed to delete user",
+    success: false,
+
+  })
+}
+
+  try {
+    const delteUserAccount = await User.findByIdAndDelete({ _id: userId });
+
+
+    if (delteUserAccount) {
+      return res.json({
+        message: "user deleted successfully",
+        success: true,
+      });
+    } else {
+      return res.json({
+        message: "user not found",
+        success: false,
+      });
+    }
+  } catch (error) {
+    console.log("error create for delete user:", error);
   }
 };

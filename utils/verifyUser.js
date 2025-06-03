@@ -5,9 +5,10 @@ export const verifyUser = async (req, res, next) => {
 // console.log(token);
 
   if (!token) {
-    return res.status(401).json({
-      message: "Unauthorized. Please login first.",
+    return res.json({
+      message: "Token Expired. Please login first.",
       success: false,
+      token:"expire"
     });
   }
 
