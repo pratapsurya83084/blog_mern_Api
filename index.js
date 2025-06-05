@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import UserRouter from "./routes/user.route.js";
 import AuthRoute from "./routes/auth.route.js";
 import PostRoute from './routes/post.route.js';
+import CommentRouter from "./routes/comment.route.js";
 import cors from 'cors';
 import cookieParser from "cookie-parser";
 // Load .env variables
@@ -49,6 +50,7 @@ dbConnect();
 app.use("/api/user", UserRouter);
 app.use("/api/auth", AuthRoute);
 app.use("/api/post", PostRoute);
+app.use("/api/Comment", CommentRouter);
 
 // app.use((err, req, res, next) => {
 //   const statusCode = err.statusCode || 500;
