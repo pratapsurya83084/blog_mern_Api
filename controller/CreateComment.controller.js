@@ -1,5 +1,5 @@
 import Comment from "../models/comment.model.js";
-
+//add blog post
 export const CreateComment = async (req, res) => {
   try {
     const { comment, postId, userId } = req.body;
@@ -122,7 +122,6 @@ export const LikeComment = async (req, res) => {
         numberOfLikes: comment.numberOfLikes,
       },
     });
-
   } catch (error) {
     console.error("Error while toggling like:", error);
     return res.status(500).json({
@@ -132,3 +131,44 @@ export const LikeComment = async (req, res) => {
   }
 };
 
+//EditeComment
+export const EditeComment = async (req, res) => {
+  const commentUser = await Comment.findById({ _id: req.params.commentId });
+  // ✅ Check if user is an admin
+  if (!req.user?.isAdmin && req.user.userId !== commentUser.userId) {
+    return res.status(403).json({
+      message: "You are not admin authorized to edit this comment",
+      success: false,
+    });
+  }
+
+  try {
+    // ✅ Find and update the comment
+    const updatedComment = await Comment.findByIdAndUpdate(
+      req.params.commentId,
+      { comment: req.body.comment },
+      { new: true }
+    );
+
+    // ✅ If comment not found
+    if (!updatedComment) {
+      return res.status(404).json({
+        message: "Comment not found",
+        success: false,
+      });
+    }
+
+    // ✅ Success response
+    return res.status(200).json({
+      message: "Comment updated successfully",
+      success: true,
+      comment: updatedComment,
+    });
+  } catch (error) {
+    console.error("Error updating comment:", error);
+    return res.status(500).json({
+      message: "Server error while updating comment",
+      success: false,
+    });
+  }
+};
