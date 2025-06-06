@@ -172,3 +172,38 @@ export const EditeComment = async (req, res) => {
     });
   }
 };
+
+//DeleteComment by commentId
+export const DeleteComment = async (req, res) => {
+  try {
+    const comment = await Comment.findById(req.params.commentId);
+    // console.log("user founded checking:", comment);
+    if (!comment) {
+      return res.json({
+        message: "Comment not found",
+        success: false,
+      });
+    }
+
+    //check isAdmin or not
+    if (!req.user.isAdmin && comment.userId !== req.user.userId) {
+      return res.json({
+        message: "You are not authorized to delete this comment",
+        success: false,
+      });
+    }
+
+    //if user is admin and also user is authorized then it can delete post
+    const deletedCommment = await Comment.findByIdAndDelete(
+      req.params.commentId
+    );
+    console.log(deletedCommment);
+    return res.json({
+      message: "comment delete successfully",
+      success: true,
+      deletedCommment,
+    });
+  } catch (error) {
+    console.log("error occuring for delete comment :", error);
+  }
+};
