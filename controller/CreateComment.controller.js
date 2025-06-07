@@ -207,3 +207,27 @@ export const DeleteComment = async (req, res) => {
     console.log("error occuring for delete comment :", error);
   }
 };
+
+//getAllComment 
+export const getAllComment = async (req, res) =>
+{
+
+
+if (!req.user.isAdmin) {
+return res.json({
+  message: "You are not authorized to view all comments",
+  success: false,
+})  
+}
+
+const getallcomment = await Comment.find();
+
+if (getallcomment) {
+  return res.json({
+    message: "all comments found",
+    success: true,
+    comment:getallcomment,
+  })
+}
+
+}

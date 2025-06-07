@@ -127,6 +127,8 @@ export const getposts = async (req, res) => {
     });
 
     res.status(200).json({
+      message: "Posts retrieved successfully",
+      success:true,
       BlogPost: posts,
       totalPosts,
       lastMonthPosts,
