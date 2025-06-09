@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import {DeleteUser, singnup,updateUser,GetUsers,DeleteUserByAdmin,getUser} from '../controller/user.controller.js';
+import {DeleteUser, singnup,updateUser,GetUsers,DeleteUserByAdmin,getUser , SendMail} from '../controller/user.controller.js';
 import { verifyUser } from '../utils/verifyUser.js';
 
 
@@ -14,6 +14,7 @@ router.get("/getusers",verifyUser,GetUsers);
 router.delete("/deleteuserbyadmin/:userId",verifyUser,DeleteUserByAdmin);
 
 router.get('/:userId',getUser);
+router.post('/subscribe/sendmail',SendMail);
 
 
 export default router;
