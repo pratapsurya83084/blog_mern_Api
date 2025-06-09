@@ -183,7 +183,7 @@ export const UpdatePost = async (req, res) => {
   const postId = req.params.postId;
   const userId = req.params.userId;
 
-  if (!req.user.isAdmin || req.user.userId != userId) {
+  if (!req.user.isAdmin) {
     return res.json({ message: "you are not allowed to update this post!" });
   }
     const { title, category, content } = req.body;
