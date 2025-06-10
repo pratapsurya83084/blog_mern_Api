@@ -18,7 +18,7 @@ app.use(cors({
  origin:"https://pratapblogs.netlify.app",
 credentials: true,  
 }))
-pratapblogs
+
 const port = process.env.PORT || 4000;
 
 const dbUrl = process.env.DB_CONNECTION_URL;
