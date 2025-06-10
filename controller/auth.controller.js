@@ -76,9 +76,9 @@ export const signin = async (req, res) => {
         // console.log(token);
 
         res.cookie("token", token, {
-          httpOnly: false,
-          secure: true, // ✅ true in production with HTTPS
-          sameSite: "None", // ✅ prevents CSRF in most cases
+          httpOnly: true,      // Corrected spelling: cannot be accessed by JS
+      secure: true,        // Required for cross-site on HTTPS
+      sameSite: "None",    // ✅ prevents CSRF in most cases
           maxAge: 24 * 24 * 60 * 60 * 1000, // 2 days
         });
 
@@ -130,9 +130,9 @@ export const google = async (req, res) => {
 
     // Set secure cookie
     res.cookie("token", token, {
-      httpOnly: false,
-      secure: true, // must be true when using SameSite: "None"
-      sameSite: "None", // required for cross-origin cookies
+      httpOnly: true,      // Corrected spelling: cannot be accessed by JS
+      secure: true,        // Required for cross-site on HTTPS
+      sameSite: "None",   // required for cross-origin cookies
       maxAge: 24 * 24 * 60 * 60 * 1000, // 2 day
     });
 

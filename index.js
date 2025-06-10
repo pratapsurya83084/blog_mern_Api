@@ -16,15 +16,13 @@ const app = express();
 app.use(cors({
 //  origin:"http://localhost:5173",
  origin:"https://pratapblogs.netlify.app",
-
 credentials: true,  
 }))
-
+pratapblogs
 const port = process.env.PORT || 4000;
 
 const dbUrl = process.env.DB_CONNECTION_URL;
-// console.log("DB URL:", dbUrl); // Check if it prints correctly
-// app.use('/images', express.static('public/images'));
+
 
 app.use(express.json());
 app.use(cookieParser());
