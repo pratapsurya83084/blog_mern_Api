@@ -66,16 +66,20 @@ export const signin = async (req, res) => {
         return res.json({ message: "invalid password", success: false });
       } else {
         //if match then return token
-        const token = jwt.sign({ userId: userExiste._id ,isAdmin:userExiste.isAdmin}, "&%$#!!(^@#@!", {
-          expiresIn: "2d",
-        });
+        const token = jwt.sign(
+          { userId: userExiste._id, isAdmin: userExiste.isAdmin },
+          "&%$#!!(^@#@!",
+          {
+            expiresIn: "2d",
+          }
+        );
         // console.log(token);
 
         res.cookie("token", token, {
-          httpOnly: true, // ✅ secure: prevents JavaScript access
-          secure: false, // ✅ true in production with HTTPS
-          sameSite: "lax", // ✅ prevents CSRF in most cases
-          maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
+          httpOnly: false,
+          secure: true, // ✅ true in production with HTTPS
+          sameSite: "None", // ✅ prevents CSRF in most cases
+          maxAge: 24 * 24 * 60 * 60 * 1000, // 2 days
         });
 
         return res.json({
@@ -116,13 +120,17 @@ export const google = async (req, res) => {
       await user.save();
     }
 
-    const token = jwt.sign({ userId: user._id , isAdmin:user.isAdmin }, "&%$#!!(^@#@!", {
-      expiresIn: "2d",
-    });
+    const token = jwt.sign(
+      { userId: user._id, isAdmin: user.isAdmin },
+      "&%$#!!(^@#@!",
+      {
+        expiresIn: "2d",
+      }
+    );
 
     // Set secure cookie
     res.cookie("token", token, {
-      httpOnly: true, // set to true for security
+      httpOnly: false,
       secure: true, // must be true when using SameSite: "None"
       sameSite: "None", // required for cross-origin cookies
       maxAge: 24 * 24 * 60 * 60 * 1000, // 2 day
@@ -137,7 +145,7 @@ export const google = async (req, res) => {
         email: user.email,
         picture: user.ProfilePicture,
         userid: user._id,
-        isAdmin:user.isAdmin
+        isAdmin: user.isAdmin,
       },
     });
   } catch (err) {
@@ -159,10 +167,8 @@ export const SignoutUser = async (req, res) => {
     expires: new Date(0), // or 'Strict' based on your app
   });
 
-  
-    res.json({
-      message: "User logout successfully",
-      success: true,
-    });
-
+  res.json({
+    message: "User logout successfully",
+    success: true,
+  });
 };
